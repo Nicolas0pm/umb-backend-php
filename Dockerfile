@@ -1,9 +1,14 @@
 FROM php:8.2-apache
 
-# Instalar extensión PDO MySQL
+RUN apt-get update && apt-get install -y \
+    default-mysql-client \
+    libpq-dev \
+    libzip-dev
+
+# Instalar extensiones necesarias
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Copiar el backend
+# Copiar la API
 COPY api/ /var/www/html/
 
 RUN a2enmod rewrite
