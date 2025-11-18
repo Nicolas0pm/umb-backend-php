@@ -1,14 +1,15 @@
 FROM php:8.2-apache
 
-RUN apt-get update && apt-get install -y \
-    default-mysql-client \
-    libpq-dev \
-    libzip-dev
+# Instalar extensiones necesarias para MySQL
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Instalar extensiones necesarias
-RUN docker-php-ext-install pdo pdo_mysql
-
-# Copiar la API
-COPY api/ /var/www/html/
-
+# Habilitar mod_rewrite (por si usas rutas limpias)
 RUN a2enmod rewrite
+
+# Copiar tu API al contenedor
+COPY ./api /var/www/html/
+
+# Dar permisos opcionales
+RUN chown -R www-data:www-data /var/www/html
+
+EXPOSE 80
